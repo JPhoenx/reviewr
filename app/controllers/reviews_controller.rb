@@ -1,23 +1,27 @@
 class ReviewsController < ApplicationController
+  before_action :require_project, only: [:new]
 
   def new
-    @project = Project.find(params[:project_id])
+    @project = Project.find(params[:format])
     @review = Review.new
   end
 
   def create
-    project = Project.find(review_params[:project_id])
-    review = Review.new(review_params)
-    review.project = project
+    review = Review.new(content: review_params[:content])
     if review.save
-      redirect_to project
-    else
-      render "new"
+      project_review = ProjectReview.create(project_id: review_params[:project_id],
+                                            review_id: review.id)
+      redirect_to project_path(review_params[:project_id])
     end
   end
 
   private
+
   def review_params
     params.require(:review).permit(:content, :project_id)
+  end
+
+  def require_project
+    redirect_to projects_path unless params[:format]
   end
 end
