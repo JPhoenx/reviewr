@@ -1,0 +1,9 @@
+<%= @review.content %>
+
+<% @ratings.each do |rating| %>
+  Kind: <%= rating.kind %><br />
+  Specific: <%= rating.specific %><br />
+  Actionable: <%= rating.actionable %><br />
+<% end %>
+
+<%= link_to "Rate review", new_rating_path(@review) %>
